@@ -1,8 +1,9 @@
-# Formulari RA Professors amb Google Sheets
+# Formulari RA Professors amb Google Sheets (segur)
 
-Aquesta aplicació permet als professors seleccionar les seves assignatures i els resultats d'aprenentatge associats. Les seleccions es desen automàticament a un Google Sheet compartit.
+Aquest formulari escriu directament a Google Sheets usant credencials definides a Streamlit Cloud secrets.
 
-## Execució local
+## Execució
 
 ```bash
 streamlit run formulari_ra_professors.py
+```
