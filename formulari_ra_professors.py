@@ -7,9 +7,7 @@ import json
 # Configuració segura via secrets de Streamlit Cloud
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 creds_dict = json.loads(st.secrets["GOOGLE_CREDENTIALS"])
-creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n").replace("\n", "\n").replace("\\n", "\n")
-creds_dict["private_key"] = creds_dict["private_key"].replace("\n", "
-")  # convertir en salts de línia reals
+creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
 sheet = client.open("Seleccions_RA_professors").sheet1
