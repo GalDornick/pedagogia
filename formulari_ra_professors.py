@@ -74,7 +74,7 @@ def save_to_gsheets(dataframe, spreadsheet_id, nom_professor):
         # Afegir les capçaleres
         worksheet.update([dataframe.columns.tolist()] + dataframe.values.tolist())
         
-        return True, f"Dades desades correctament al full '{nom_full}'"
+        return True, f"Dades desades correctament. Moltes gràcies!"
     except Exception as e:
         return False, f"Error en desar les dades: {str(e)}"
 
@@ -89,7 +89,7 @@ except Exception as e:
 st.title("Selecció de Resultats d'Aprenentatge per Professor/a")
 
 # Demanar el nom del professor/a
-nom_professor = st.text_input("El teu nom i cognoms:")
+nom_professor = st.text_input("Per favor, indica el teu nom i cognoms:")
 
 # ID del full de càlcul de Google Sheets
 spreadsheet_id = "1ct5-tRmChvJUHU8Bjburrm2gmgS8in6b3roshjt0v1k"
@@ -108,7 +108,7 @@ for assignatura in assignatures_seleccionades:
     ra_materia = ra_data[ra_data["Matèria"] == materia][["Codi RA", "Resultado de aprendizaje"]]
 
     st.header(f"2. RA per a l'assignatura: {assignatura} ({materia})")
-    st.write("Selecciona els RA que treballes a aquesta assignatura:")
+    st.write("A la llista següent apareixen els Resultats d'Aprenentatge (RA) de la matèria a la qual pertany l'assignatura seleccionada. Per favor, selecciona els RA que treballes en aquesta assignatura en concret:")
     
     # Crear checkboxes per cada RA
     for _, ra_row in ra_materia.iterrows():
@@ -130,9 +130,14 @@ for assignatura in assignatures_seleccionades:
     # Afegir una línia separadora entre assignatures
     st.divider()
 
+# Mostrar i descarregar resultat
+if seleccions_final:
+    df_resultat = pd.DataFrame(seleccions_final)
+    st.success("Seleccions enregistrades!")
+    st.dataframe(df_resultat)
     
     # Botó per desar a Google Sheets
-    if st.button("Envia les seleccions al cap d'estudis"):
+    if st.button("Desa les teves respostes"):
         if not nom_professor:
             st.error("Si us plau, introdueix el teu nom abans de desar.")
         else:
