@@ -1,16 +1,18 @@
 import streamlit as st
 import pandas as pd
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2 import service_account
 import datetime
 
 # Configurar l'accés a Google Sheets
 @st.cache_resource
 def setup_gsheets_connection():
-    scope = ['https://spreadsheets.google.com/feeds',
-             'https://www.googleapis.com/auth/drive']
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(
-        'credencials.json', scope)  # Substitueix per la ruta al teu fitxer de credencials
+    # Usar st.secrets en lugar de un archivo físico
+    credentials = service_account.Credentials.from_service_account_info(
+        st.secrets["gcp_service_account"],
+        scopes=['https://spreadsheets.google.com/feeds',
+                'https://www.googleapis.com/auth/drive']
+    )
     client = gspread.authorize(credentials)
     return client
 
@@ -43,8 +45,12 @@ def save_to_gsheets(dataframe, spreadsheet_id, nom_professor):
         return False, f"Error en desar les dades: {str(e)}"
 
 # Carregar les dades de RA per matèria (simulades)
-ra_data = pd.read_excel("Plantilla_RA_per_Materia_Ordenada.xlsx")
-assignatures_data = pd.read_excel("Assignatures_per_Materia.xlsx")
+try:
+    ra_data = pd.read_excel("Plantilla_RA_per_Materia_Ordenada.xlsx")
+    assignatures_data = pd.read_excel("Assignatures_per_Materia.xlsx")
+except Exception as e:
+    st.error(f"Error al carregar els arxius Excel: {str(e)}")
+    st.stop()
 
 st.title("Selecció de Resultats d'Aprenentatge per Professor/a")
 
