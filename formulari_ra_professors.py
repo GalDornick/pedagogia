@@ -110,22 +110,27 @@ for assignatura in assignatures_seleccionades:
     st.header(f"2. RA per a l'assignatura: {assignatura} ({materia})")
     st.write("A la llista següent apareixen els Resultats d'Aprenentatge (RA) de la matèria a la qual pertany l'assignatura seleccionada. Per favor, selecciona els RA que treballes en aquesta assignatura en concret:")
     
-    # Crear checkboxes per cada RA
+    # Utilitzar expander per cada RA
     for _, ra_row in ra_materia.iterrows():
         codi_ra = ra_row["Codi RA"]
         descripcio_ra = ra_row["Resultado de aprendizaje"]
-        # Retallar la descripció si és massa llarga
+        
+        # Retallar la descripció per mostrar-la a la checkbox
         descripcio_curta = descripcio_ra[:100] + "..." if len(descripcio_ra) > 100 else descripcio_ra
         
-        # Crear una checkbox per aquest RA
-        if st.checkbox(f"{codi_ra} – {descripcio_curta}", key=f"{assignatura}_{codi_ra}"):
-            seleccions_final.append({
-                "Professor/a": nom_professor,
-                "Assignatura": assignatura,
-                "Matèria": materia,
-                "Codi RA": codi_ra,
-                "Data_Selecció": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            })
+        # Crear un expander amb el RA
+        with st.expander(f"{codi_ra} – {descripcio_curta}"):
+            # Mostrar el RA complet
+            st.write(f"**{codi_ra}**: {descripcio_ra}")
+            # Checkbox dins l'expander
+            if st.checkbox(f"Seleccionar aquest RA", key=f"{assignatura}_{codi_ra}_check"):
+                seleccions_final.append({
+                    "Professor/a": nom_professor,
+                    "Assignatura": assignatura,
+                    "Matèria": materia,
+                    "Codi RA": codi_ra,
+                    "Data_Selecció": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                })
     
     # Afegir una línia separadora entre assignatures
     st.divider()
