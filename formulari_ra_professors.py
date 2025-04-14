@@ -6,6 +6,7 @@ import datetime
 import json
 from pytz import timezone
 zona_espanya = timezone("Europe/Madrid")
+classificacio = ra_row["Clasificación"]
 
 # Configurar l'accés a Google Sheets
 @st.cache_resource
@@ -141,7 +142,8 @@ for assignatura in assignatures_seleccionades:
         
         # Expander a la segona columna
         with col2:
-            with st.expander(f"{codi_ra} – {descripcio_curta}"):
+            with st.expander(f"{codi_ra} – {descripcio_curta} [{classificacio}]"):
+                st.write(f"**Classificació:** {classificacio}")
                 st.write(f"{descripcio_ra}")
     
     # Afegir una línia separadora entre assignatures
