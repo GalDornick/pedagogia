@@ -98,6 +98,7 @@ spreadsheet_id = "1ct5-tRmChvJUHU8Bjburrm2gmgS8in6b3roshjt0v1k"
 
 # Pas 1: Selecció de les assignatures del professor/a
 st.header("1. Selecciona les assignatures que són responsabilitat teva")
+st.info("El nom de les assignatures apareix en castellà per minimitzar inconsistències amb la memòria verificada")
 assignatures_disponibles = assignatures_data["Assignatura"].unique()
 assignatures_seleccionades = st.multiselect("Assignatures:", assignatures_disponibles)
 
@@ -113,7 +114,7 @@ for assignatura in assignatures_seleccionades:
     st.write("A la llista següent apareixen els Resultats d'Aprenentatge (RA) de la matèria a la qual pertany l'assignatura seleccionada. Per favor, selecciona els RA que treballes en aquesta assignatura en concret:")
     
     # Afegir una nota sobre com veure els RA complets
-    st.info("🔍 Si necessites veure la descripció completa d'un RA, fes clic a la fletxa per expandir el seu contingut.")
+    st.info("🔍 Si necessites veure la descripció completa d'un RA, fes clic a la fletxa per expandir el seu contingut (mantenim els RA en castellà per minimitzar inconsistències amb la memòria verificada).")
     
     # Per cada RA
     for _, ra_row in ra_materia.iterrows():
