@@ -108,7 +108,7 @@ seleccions_final = []
 # Per cada assignatura seleccionada, mostrar els RA de la seva matèria
 for assignatura in assignatures_seleccionades:
     materia = assignatures_data[assignatures_data["Assignatura"] == assignatura]["Matèria"].values[0]
-    ra_materia = ra_data[ra_data["Matèria"] == materia][["Codi RA", "Resultado de aprendizaje"]]
+    ra_materia = ra_data[ra_data["Matèria"] == materia][["Codi RA", "Resultado de aprendizaje", "Clasificación"]]
 
     st.header(f"2. RA per a l'assignatura: {assignatura} ({materia})")
     st.write("A la llista següent apareixen els Resultats d'Aprenentatge (RA) de la matèria a la qual pertany l'assignatura seleccionada. Per favor, selecciona els RA que treballes en aquesta assignatura en concret:")
@@ -136,12 +136,14 @@ for assignatura in assignatures_seleccionades:
                     "Assignatura": assignatura,
                     "Matèria": materia,
                     "Codi RA": codi_ra,
+                    "Classificació": classificacio,
                     "Data_Selecció": datetime.datetime.now(zona_espanya).strftime("%Y-%m-%d %H:%M:%S")
                 })
         
         # Expander a la segona columna
         with col2:
-            with st.expander(f"{codi_ra} – {descripcio_curta}"):
+            with st.expander(f"{codi_ra} – {descripcio_curta} [{classificacio}]"):
+                st.write(f"**Classificació:** {classificacio}")
                 st.write(f"{descripcio_ra}")
     
     # Afegir una línia separadora entre assignatures
