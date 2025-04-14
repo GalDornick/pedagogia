@@ -88,7 +88,7 @@ except Exception as e:
     st.error(f"Error al carregar els arxius Excel: {str(e)}")
     st.stop()
 
-st.title("Grau de Pedagogia. Resultats d'Aprenentatge")
+st.title("Grau de Pedagogia UIB. Selecció de Resultats d'Aprenentatge per assignatura")
 
 # Demanar el nom del professor/a
 nom_professor = st.text_input("Per favor, indica el teu nom i cognoms:")
