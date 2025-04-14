@@ -56,9 +56,12 @@ def setup_gsheets_connection():
         st.error(f"Error en establir connexió amb Google: {str(e)}")
         return None
 
-# Funció per desar a Google Sheets
+# Funció per desar a Google Sheets (tant al full individual com al resum)
 def save_to_gsheets(dataframe, spreadsheet_id, nom_professor):
-    """Desa el dataframe a un nou full al Google Sheet especificat"""
+    """
+    Desa el dataframe a un nou full al Google Sheet especificat 
+    i també actualitza el full de resum (primera fulla)
+    """
     client = setup_gsheets_connection()
     
     if client is None:
@@ -68,7 +71,7 @@ def save_to_gsheets(dataframe, spreadsheet_id, nom_professor):
         # Obrir el full de càlcul pel seu ID
         spreadsheet = client.open_by_key(spreadsheet_id)
         
-        # Crear un nou full amb el nom del professor i la data
+        # 1. Crear un nou full amb el nom del professor i la data
         data_actual = datetime.datetime.now(zona_espanya).strftime("%Y-%m-%d_%H-%M")
         nom_full = f"{nom_professor}_{data_actual}"
         
@@ -80,10 +83,41 @@ def save_to_gsheets(dataframe, spreadsheet_id, nom_professor):
             nom_full = f"{nom_professor}_{data_actual}_{random.randint(1, 1000)}"
             worksheet = spreadsheet.add_worksheet(title=nom_full, rows=len(dataframe) + 1, cols=dataframe.shape[1])
         
-        # Afegir les capçaleres
+        # Afegir les capçaleres i dades al full individual
         worksheet.update([dataframe.columns.tolist()] + dataframe.values.tolist())
         
-        return True, f"Dades desades correctament. Moltes gràcies!"
+        # 2. Actualitzar el full de resum (primera fulla)
+        try:
+            # Obtenir el primer full (resum)
+            summary_sheet = spreadsheet.get_worksheet(0)
+            
+            # Obtenir les dades actuals del full de resum
+            existing_data = summary_sheet.get_all_values()
+            
+            # Si el full està buit, afegir les capçaleres
+            if not existing_data:
+                summary_sheet.update([dataframe.columns.tolist()] + dataframe.values.tolist())
+            else:
+                # Si ja hi ha dades, afegir només les noves files (sense les capçaleres)
+                # Determinar la primera fila buida
+                next_row = len(existing_data) + 1
+                
+                # Comprovar si les capçaleres coincideixen
+                headers = existing_data[0]
+                df_headers = dataframe.columns.tolist()
+                
+                if headers != df_headers:
+                    st.warning(f"Les capçaleres del full de resum no coincideixen amb les dades actuals. Es mantindran les capçaleres existents.")
+                
+                # Afegir les noves files a partir de la primera fila buida
+                if dataframe.values.tolist():  # Comprovar si hi ha files per afegir
+                    cell_range = f'A{next_row}'
+                    summary_sheet.update(cell_range, dataframe.values.tolist())
+                
+        except Exception as e:
+            return False, f"S'han desat les dades al full individual, però ha fallat l'actualització del resum: {str(e)}"
+        
+        return True, f"Dades desades correctament al full individual i al resum. Moltes gràcies!"
     except Exception as e:
         return False, f"Error en desar les dades: {str(e)}"
 
