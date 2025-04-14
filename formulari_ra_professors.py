@@ -130,23 +130,9 @@ for assignatura in assignatures_seleccionades:
     # Afegir una línia separadora entre assignatures
     st.divider()
 
-# Mostrar i descarregar resultat
-if seleccions_final:
-    df_resultat = pd.DataFrame(seleccions_final)
-    st.success("Seleccions enregistrades!")
-    st.dataframe(df_resultat)
-
-    # Opció per descarregar en CSV
-    csv = df_resultat.to_csv(index=False).encode('utf-8')
-    st.download_button(
-        label="Descarrega les teves seleccions en CSV",
-        data=csv,
-        file_name='seleccio_RA_professor.csv',
-        mime='text/csv'
-    )
     
     # Botó per desar a Google Sheets
-    if st.button("Desa les seleccions a Google Sheets"):
+    if st.button("Envia les seleccions al cap d'estudis"):
         if not nom_professor:
             st.error("Si us plau, introdueix el teu nom abans de desar.")
         else:
