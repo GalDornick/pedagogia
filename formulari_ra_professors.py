@@ -98,7 +98,7 @@ spreadsheet_id = "1ct5-tRmChvJUHU8Bjburrm2gmgS8in6b3roshjt0v1k"
 
 # Pas 1: Selecció de les assignatures del professor/a
 st.header("1. Selecciona les assignatures que són responsabilitat teva")
-st.info("El nom de les assignatures apareix en castellà per minimitzar inconsistències amb la memòria verificada")
+st.info("El nom de les assignatures apareix en castellà per minimitzar inconsistències amb la memòria verificada.")
 assignatures_disponibles = assignatures_data["Assignatura"].unique()
 assignatures_seleccionades = st.multiselect("Assignatures:", assignatures_disponibles)
 
