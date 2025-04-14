@@ -4,6 +4,8 @@ import gspread
 from google.oauth2 import service_account
 import datetime
 import json
+from pytz import timezone
+zona_espanya = timezone("Europe/Madrid")
 
 # Configurar l'accés a Google Sheets
 @st.cache_resource
@@ -59,7 +61,7 @@ def save_to_gsheets(dataframe, spreadsheet_id, nom_professor):
         spreadsheet = client.open_by_key(spreadsheet_id)
         
         # Crear un nou full amb el nom del professor i la data
-        data_actual = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")
+        data_actual = datetime.datetime.now(zona_espanya).strftime("%Y-%m-%d_%H-%M")
         nom_full = f"{nom_professor}_{data_actual}"
         
         # Comprovar si ja existeix un full amb el mateix nom
@@ -133,7 +135,7 @@ for assignatura in assignatures_seleccionades:
                     "Assignatura": assignatura,
                     "Matèria": materia,
                     "Codi RA": codi_ra,
-                    "Data_Selecció": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    "Data_Selecció": datetime.datetime.now(zona_espanya).strftime("%Y-%m-%d %H:%M:%S")
                 })
         
         # Expander a la segona columna
