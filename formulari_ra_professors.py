@@ -110,20 +110,24 @@ for assignatura in assignatures_seleccionades:
     st.header(f"2. RA per a l'assignatura: {assignatura} ({materia})")
     st.write("A la llista següent apareixen els Resultats d'Aprenentatge (RA) de la matèria a la qual pertany l'assignatura seleccionada. Per favor, selecciona els RA que treballes en aquesta assignatura en concret:")
     
-    # Utilitzar expander per cada RA
+    # Afegir una nota sobre com veure els RA complets
+    st.info("🔍 Si necessites veure la descripció completa d'un RA, fes clic a la fletxa per expandir el seu contingut.")
+    
+    # Per cada RA
     for _, ra_row in ra_materia.iterrows():
         codi_ra = ra_row["Codi RA"]
         descripcio_ra = ra_row["Resultado de aprendizaje"]
         
-        # Retallar la descripció per mostrar-la a la checkbox
+        # Retallar la descripció si és massa llarga
         descripcio_curta = descripcio_ra[:100] + "..." if len(descripcio_ra) > 100 else descripcio_ra
         
-        # Crear un expander amb el RA
-        with st.expander(f"{codi_ra} – {descripcio_curta}"):
-            # Mostrar el RA complet
-            st.write(f"**{codi_ra}**: {descripcio_ra}")
-            # Checkbox dins l'expander
-            if st.checkbox(f"Seleccionar aquest RA", key=f"{assignatura}_{codi_ra}_check"):
+        # Columnes per la checkbox i l'expander
+        col1, col2 = st.columns([1, 20])
+        
+        # Checkbox a la primera columna
+        with col1:
+            is_selected = st.checkbox("", key=f"{assignatura}_{codi_ra}")
+            if is_selected:
                 seleccions_final.append({
                     "Professor/a": nom_professor,
                     "Assignatura": assignatura,
@@ -131,6 +135,11 @@ for assignatura in assignatures_seleccionades:
                     "Codi RA": codi_ra,
                     "Data_Selecció": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 })
+        
+        # Expander a la segona columna
+        with col2:
+            with st.expander(f"{codi_ra} – {descripcio_curta}"):
+                st.write(f"{descripcio_ra}")
     
     # Afegir una línia separadora entre assignatures
     st.divider()
