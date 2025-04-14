@@ -75,8 +75,6 @@ seleccions_final = []
 for assignatura in assignatures_seleccionades:
     materia = assignatures_data[assignatures_data["Assignatura"] == assignatura]["Matèria"].values[0]
     ra_materia = ra_data[ra_data["Matèria"] == materia][["Codi RA", "Resultado de aprendizaje", "Clasificación"]]
-    st.write("Columnes disponibles a ra_materia:", ra_materia.columns.tolist())
-    st.dataframe(ra_materia.head())
     st.header(f"2. RA per a l'assignatura: {assignatura} ({materia})")
     st.info("🔍 Si necessites veure la descripció completa d'un RA, fes clic a la fletxa per expandir el seu contingut.")
 
