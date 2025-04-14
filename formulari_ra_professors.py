@@ -149,7 +149,7 @@ for assignatura in assignatures_seleccionades:
 # Mostrar i descarregar resultat
 if seleccions_final:
     df_resultat = pd.DataFrame(seleccions_final)
-    st.success("Seleccions enregistrades!")
+    st.success("Revisa la teva selecció i desa-la al botó de davall")
     st.dataframe(df_resultat)
     
     # Botó per desar a Google Sheets
