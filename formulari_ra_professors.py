@@ -3,13 +3,47 @@ import pandas as pd
 import gspread
 from google.oauth2 import service_account
 import datetime
+import json
 
 # Configurar l'accés a Google Sheets
 @st.cache_resource
 def setup_gsheets_connection():
-    # Usar st.secrets en lugar de un archivo físico
+    # Intentar diferentes formas de acceder a las credenciales
+    try:
+        # Opción 1: Las credenciales están en un diccionario anidado llamado "gcp_service_account"
+        credentials_dict = st.secrets["gcp_service_account"]
+    except KeyError:
+        try:
+            # Opción 2: Las credenciales están en el nivel superior de st.secrets
+            credentials_dict = {
+                "type": st.secrets["type"],
+                "project_id": st.secrets["project_id"],
+                "private_key_id": st.secrets["private_key_id"],
+                "private_key": st.secrets["private_key"],
+                "client_email": st.secrets["client_email"],
+                "client_id": st.secrets["client_id"],
+                "auth_uri": st.secrets["auth_uri"],
+                "token_uri": st.secrets["token_uri"],
+                "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
+                "client_x509_cert_url": st.secrets["client_x509_cert_url"]
+            }
+        except KeyError:
+            # Si no se pueden obtener las credenciales, mostrar un mensaje de error explicativo
+            st.error("""
+            No s'han trobat les credencials per connectar amb Google Sheets. 
+            Si us plau, configura els secrets a Streamlit Cloud amb les credencials del compte de servei de Google.
+            """)
+            st.info("""
+            Per a fer-ho:
+            1. Vés a "Manage app" a la cantonada inferior dreta
+            2. Selecciona "Secrets"
+            3. Afegeix les credencials del teu compte de servei
+            """)
+            st.stop()
+    
+    # Crear credenciales con los valores obtenidos
     credentials = service_account.Credentials.from_service_account_info(
-        st.secrets["gcp_service_account"],
+        credentials_dict,
         scopes=['https://spreadsheets.google.com/feeds',
                 'https://www.googleapis.com/auth/drive']
     )
