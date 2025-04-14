@@ -117,7 +117,7 @@ def save_to_gsheets(dataframe, spreadsheet_id, nom_professor):
         except Exception as e:
             return False, f"S'han desat les dades al full individual, però ha fallat l'actualització del resum: {str(e)}"
         
-        return True, f"Dades desades correctament al full individual i al resum. Moltes gràcies!"
+        return True, f"Dades desades correctament. Moltes gràcies!"
     except Exception as e:
         return False, f"Error en desar les dades: {str(e)}"
 
